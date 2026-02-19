@@ -1685,7 +1685,7 @@ function Dropdown.new(section, config)
     self.Utils = section.Utils
     self.Text = config.Text or "Dropdown"
     self.Options = config.Options or {}
-    self.Default = config.Default or (self.Options[1] if #self.Options > 0 else nil)
+    self.Default = config.Default or (#self.Options > 0 and self.Options[1] or nil)
     self.MultiSelect = config.MultiSelect or false
     self.Callback = config.Callback or function() end
     self.Disabled = config.Disabled or false
