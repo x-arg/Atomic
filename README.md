@@ -13,23 +13,18 @@ A minimalist, feature-rich UI library for Roblox with dark mode design and smoot
 
 ## Installation
 
-### Method 1: Load from GitHub
+### Load from GitHub
 
 ```lua
 local Atomic = loadstring(game:HttpGet("https://raw.githubusercontent.com/x-arg/Atomic/main/src/Atomic.luau"))()
 ```
 
-### Method 2: Local Import
-
-Place the `src` folder in your project and require it:
-
-```lua
-local Atomic = require(script.Parent:WaitForChild("Atomic"))
-```
-
 ## Quick Start
 
 ```lua
+-- Load the library
+local Atomic = loadstring(game:HttpGet("https://raw.githubusercontent.com/x-arg/Atomic/main/src/Atomic.luau"))()
+
 -- Create a window
 local Window = Atomic:CreateWindow({
     Title = "My App",
@@ -71,10 +66,8 @@ local Window = Atomic:CreateWindow({
     Title = "Window Title",           -- Window title
     Size = UDim2.fromOffset(500, 400), -- Window size
     Position = UDim2.fromOffset(100, 100), -- Window position
-    Theme = "Dark",                    -- Theme (currently only Dark)
     AccentColor = Color3.fromRGB(88, 101, 242), -- Accent color
     ToggleKey = Enum.KeyCode.RightControl, -- Toggle visibility key
-    ShowToggleButton = true,           -- Show minimize/close buttons
     Draggable = true,                  -- Allow window dragging
     Minimizable = true                 -- Allow minimizing
 })
@@ -86,8 +79,7 @@ Organize content into tabs.
 
 ```lua
 local Tab = Window:CreateTab({
-    Name = "Tab Name",
-    Icon = "rbxassetid://..." -- Optional icon
+    Name = "Tab Name"
 })
 ```
 
@@ -251,9 +243,7 @@ local progress = Section:AddProgress({
 progress:SetValue(50)       -- Set progress
 progress:Increment()        -- Add 1
 progress:Increment(10)      -- Add 10
-progress:Decrement()        -- Subtract 1
 progress:Reset()            -- Set to 0
-progress:Complete()         -- Set to max
 ```
 
 ### Label
@@ -287,9 +277,7 @@ Section:AddParagraph({
 Visual separator.
 
 ```lua
-Section:AddDivider({
-    Text = "Optional Label" -- Creates labeled divider
-})
+Section:AddDivider()
 ```
 
 ### Notification
@@ -354,37 +342,6 @@ Atomic.Utils:RGBtoHSV(Color3.fromRGB(255, 0, 0))
 
 -- Math helpers
 Atomic.Utils:Round(3.14159, 2) -- 3.14
-Atomic.Utils:Clamp(150, 0, 100) -- 100
-```
-
-## Project Structure
-
-```
-Atomic/
-├── src/
-│   ├── Atomic.luau       # Main library entry
-│   ├── Theme.luau        # Theme configuration
-│   ├── Utilities.luau    # Helper functions
-│   └── components/
-│       ├── Window.luau
-│       ├── Tab.luau
-│       ├── Section.luau
-│       ├── Button.luau
-│       ├── Toggle.luau
-│       ├── Slider.luau
-│       ├── TextBox.luau
-│       ├── Dropdown.luau
-│       ├── Label.luau
-│       ├── Paragraph.luau
-│       ├── Divider.luau
-│       ├── Keybind.luau
-│       ├── ColorPicker.luau
-│       ├── Progress.luau
-│       ├── Notification.luau
-│       └── Tooltip.luau
-├── examples/
-│   └── Demo.lua          # Full demo script
-└── README.md
 ```
 
 ## License

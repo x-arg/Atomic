@@ -5,16 +5,11 @@
     of the Atomic UI library.
     
     Usage:
-    1. Place the Atomic folder in your game
-    2. Require the library: local Atomic = loadstring(game:HttpGet("path/to/Atomic"))()
-    3. Create windows, tabs, and add components
+    local Atomic = loadstring(game:HttpGet("https://raw.githubusercontent.com/x-arg/Atomic/main/src/Atomic.luau"))()
 ]]
 
 -- Load the library
 local Atomic = loadstring(game:HttpGet("https://raw.githubusercontent.com/x-arg/Atomic/main/src/Atomic.luau"))()
-
--- Or if using locally:
--- local Atomic = require(script.Parent:WaitForChild("Atomic"))
 
 -- Create main window
 local Window = Atomic:CreateWindow({
@@ -45,7 +40,7 @@ HomeSection:AddParagraph({
     Text = "Atomic is a minimalist, feature-rich UI library for Roblox. It features a dark mode design with white text, smooth animations, and a complete set of components for building beautiful interfaces."
 })
 
-HomeSection:AddDivider({Text = "Quick Stats"})
+HomeSection:AddDivider()
 
 local StatsSection = HomeTab:CreateSection({Name = "Statistics", Column = 2})
 
@@ -112,12 +107,6 @@ TogglesSection:AddToggle({
     Callback = function(value)
         print("Auto-save:", value)
     end
-})
-
-TogglesSection:AddToggle({
-    Text = "Disabled Toggle",
-    Default = false,
-    Disabled = true
 })
 
 local SlidersSection = InputsTab:CreateSection({Name = "Sliders", Column = 1})
@@ -251,47 +240,8 @@ ProgressSection:AddButton({
     end
 })
 
-local progress2 = ProgressSection:AddProgress({
-    Text = "Upload Progress",
-    Default = 0,
-    Max = 100,
-    Color = Color3.fromRGB(87, 242, 135)
-})
-
-ProgressSection:AddButton({
-    Text = "Simulate Upload",
-    Style = "Success",
-    Callback = function()
-        progress2:Reset()
-        for i = 1, 100 do
-            task.wait(0.03)
-            progress2:Increment()
-        end
-        Atomic:Notify({
-            Title = "Upload Complete",
-            Content = "Your file has been uploaded successfully.",
-            Type = "Success",
-            Duration = 3
-        })
-    end
-})
-
 -- ==================== SETTINGS TAB ====================
 local UISettingsSection = SettingsTab:CreateSection({Name = "UI Settings", Column = 1})
-
-UISettingsSection:AddSlider({
-    Text = "Window Scale",
-    Min = 0.5,
-    Max = 1.5,
-    Default = 1,
-    Increment = 0.1,
-    Precise = true,
-    Callback = function(value)
-        -- Scale the window
-        local baseSize = UDim2.fromOffset(580, 450)
-        Window:SetSize(UDim2.fromOffset(baseSize.X.Offset * value, baseSize.Y.Offset * value))
-    end
-})
 
 UISettingsSection:AddColorPicker({
     Text = "Accent Color",
