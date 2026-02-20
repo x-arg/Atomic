@@ -319,22 +319,6 @@ function Window:_CreateWindow()
     self.ScreenGui = screenGui
     table.insert(self.Library._Objects, screenGui)
     
-    -- Shadow
-    local shadow = Instance.new("ImageLabel")
-    shadow.Name = "Shadow"
-    shadow.AnchorPoint = Vector2.new(0.5, 0.5)
-    shadow.BackgroundTransparency = 1
-    shadow.Position = UDim2.fromScale(0.5, 0.5)
-    shadow.Size = UDim2.fromOffset(self.Config.Size.X.Offset + 60, self.Config.Size.Y.Offset + 60)
-    shadow.ZIndex = 0
-    shadow.Image = "rbxassetid://6014261993"
-    shadow.ImageColor3 = self.Theme.Shadow
-    shadow.ImageTransparency = 0.4
-    shadow.ScaleType = Enum.ScaleType.Slice
-    shadow.SliceCenter = Rect.new(49, 49, 450, 450)
-    shadow.Parent = screenGui
-    self.Shadow = shadow
-    
     -- Main frame
     local windowFrame = Instance.new("Frame")
     windowFrame.Name = "Window"
@@ -344,6 +328,22 @@ function Window:_CreateWindow()
     windowFrame.BorderSizePixel = 0
     windowFrame.Parent = screenGui
     self.Frame = windowFrame
+    
+    -- Shadow (parented to frame so it follows)
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "Shadow"
+    shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+    shadow.BackgroundTransparency = 1
+    shadow.Position = UDim2.fromScale(0.5, 0.5)
+    shadow.Size = UDim2.fromScale(1.1, 1.15)
+    shadow.ZIndex = -1
+    shadow.Image = "rbxassetid://6014261993"
+    shadow.ImageColor3 = self.Theme.Shadow
+    shadow.ImageTransparency = 0.5
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(49, 49, 450, 450)
+    shadow.Parent = windowFrame
+    self.Shadow = shadow
     
     local windowCorner = Instance.new("UICorner")
     windowCorner.CornerRadius = UDim.new(0, 10)
@@ -404,31 +404,29 @@ function Window:_CreateWindow()
     titleRow.BackgroundTransparency = 1
     titleRow.Parent = headerContent
     
-    local titleRowLayout = Instance.new("UIListLayout")
-    titleRowLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    titleRowLayout.FillDirection = Enum.FillDirection.Horizontal
-    titleRowLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    titleRowLayout.Parent = titleRow
-    
     -- Title
     local title = Instance.new("TextLabel")
     title.Name = "Title"
     title.Size = UDim2.fromScale(1, 0)
-    title.AutomaticSize = Enum.AutomaticSize.XY
+    title.AutomaticSize = Enum.AutomaticSize.Y
     title.BackgroundTransparency = 1
     title.Text = self.Config.Title
     title.TextColor3 = self.Theme.TextPrimary
     title.TextSize = 16
     title.FontFace = self.Theme.Font.Bold
     title.TextXAlignment = Enum.TextXAlignment.Left
-    title.LayoutOrder = 1
     title.Parent = titleRow
     self.Title = title
+    
+    local titlePadding = Instance.new("UIPadding")
+    titlePadding.PaddingRight = UDim.new(0, 70)
+    titlePadding.Parent = title
     
     -- Version badge
     local version = Instance.new("TextLabel")
     version.Name = "Version"
     version.Size = UDim2.fromOffset(0, 18)
+    version.Position = UDim2.fromOffset(0, 2)
     version.AutomaticSize = Enum.AutomaticSize.X
     version.BackgroundColor3 = self.Theme.Card
     version.BackgroundTransparency = 0
@@ -437,7 +435,6 @@ function Window:_CreateWindow()
     version.TextColor3 = self.Theme.TextMuted
     version.TextSize = 10
     version.FontFace = self.Theme.Font.Main
-    version.LayoutOrder = 2
     version.Parent = titleRow
     
     local versionCorner = Instance.new("UICorner")
@@ -448,6 +445,21 @@ function Window:_CreateWindow()
     versionPadding.PaddingLeft = UDim.new(0, 6)
     versionPadding.PaddingRight = UDim.new(0, 6)
     versionPadding.Parent = version
+    
+    -- Controls container (positioned on right)
+    local controls = Instance.new("Frame")
+    controls.Name = "Controls"
+    controls.Size = UDim2.fromOffset(60, 24)
+    controls.Position = UDim2.fromScale(1, 0)
+    controls.AnchorPoint = Vector2.new(1, 0)
+    controls.BackgroundTransparency = 1
+    controls.Parent = titleRow
+    
+    local controlsLayout = Instance.new("UIListLayout")
+    controlsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    controlsLayout.FillDirection = Enum.FillDirection.Horizontal
+    controlsLayout.Padding = UDim.new(0, 6)
+    controlsLayout.Parent = controls
     
     -- Tab buttons container
     local tabButtons = Instance.new("Frame")
@@ -465,21 +477,6 @@ function Window:_CreateWindow()
     tabButtonsLayout.Padding = UDim.new(0, 4)
     tabButtonsLayout.Parent = tabButtons
     
-    -- Controls
-    local controls = Instance.new("Frame")
-    controls.Name = "Controls"
-    controls.Size = UDim2.fromScale(0, 1)
-    controls.AutomaticSize = Enum.AutomaticSize.X
-    controls.BackgroundTransparency = 1
-    controls.LayoutOrder = 3
-    controls.Parent = titleRow
-    
-    local controlsLayout = Instance.new("UIListLayout")
-    controlsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    controlsLayout.FillDirection = Enum.FillDirection.Horizontal
-    controlsLayout.Padding = UDim.new(0, 8)
-    controlsLayout.Parent = controls
-    
     -- Minimize button
     if self.Config.Minimizable then
         local minimizeBtn = Instance.new("TextButton")
@@ -492,7 +489,6 @@ function Window:_CreateWindow()
         minimizeBtn.TextSize = 18
         minimizeBtn.FontFace = self.Theme.Font.Bold
         minimizeBtn.AutoButtonColor = false
-        minimizeBtn.LayoutOrder = 1
         minimizeBtn.Parent = controls
         self.MinimizeButton = minimizeBtn
         
@@ -524,7 +520,6 @@ function Window:_CreateWindow()
     closeBtn.TextSize = 18
     closeBtn.FontFace = self.Theme.Font.Bold
     closeBtn.AutoButtonColor = false
-    closeBtn.LayoutOrder = 2
     closeBtn.Parent = controls
     self.CloseButton = closeBtn
     
@@ -880,11 +875,8 @@ function Section:_CreateSection()
     header.Size = UDim2.fromScale(1, 0)
     header.AutomaticSize = Enum.AutomaticSize.Y
     header.BackgroundTransparency = 1
+    header.LayoutOrder = 1
     header.Parent = section
-    
-    local headerLayout = Instance.new("UIListLayout")
-    headerLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    headerLayout.Parent = header
     
     -- Title
     local title = Instance.new("TextLabel")
@@ -910,11 +902,16 @@ function Section:_CreateSection()
     local divider = Instance.new("Frame")
     divider.Name = "Divider"
     divider.Size = UDim2.new(1, -24, 0, 1)
-    divider.Position = UDim2.fromOffset(12, 0)
     divider.BackgroundColor3 = self.Theme.Border
     divider.BackgroundTransparency = 0.3
     divider.BorderSizePixel = 0
-    divider.Parent = header
+    divider.LayoutOrder = 2
+    divider.Parent = section
+    
+    local dividerPadding = Instance.new("UIPadding")
+    dividerPadding.PaddingLeft = UDim.new(0, 12)
+    dividerPadding.PaddingRight = UDim.new(0, 12)
+    dividerPadding.Parent = divider
     
     -- Content
     local content = Instance.new("Frame")
@@ -922,6 +919,7 @@ function Section:_CreateSection()
     content.Size = UDim2.fromScale(1, 0)
     content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
+    content.LayoutOrder = 3
     content.Parent = section
     self.Content = content
     
@@ -936,6 +934,11 @@ function Section:_CreateSection()
     contentPadding.PaddingLeft = UDim.new(0, 12)
     contentPadding.PaddingRight = UDim.new(0, 12)
     contentPadding.Parent = content
+    
+    -- Section layout
+    local sectionLayout = Instance.new("UIListLayout")
+    sectionLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    sectionLayout.Parent = section
 end
 
 function Section:AddButton(config)
